@@ -2,10 +2,14 @@
 from distutils.version import LooseVersion
 
 import cms
+from aldryn_apphooks_config.admin import ModelAppHookConfig, BaseAppHookConfig
+
 from cms.admin.placeholderadmin import FrontendEditableAdminMixin, PlaceholderAdminMixin
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 from hvad.admin import TranslatableAdmin
 
+from aldryn_news.cms_appconfig import NewsConfig
 from aldryn_news.forms import CategoryForm, NewsForm
 from aldryn_news.models import Category, News, Tag, TaggedItem
 
@@ -58,6 +62,19 @@ class TagAdmin(TranslatableAdmin):
         return fieldsets
 
 
+class NewsConfigAdmin(BaseAppHookConfig, admin.ModelAdmin):
+
+    def get_config_fields(self):
+        return (
+            'paginate_by',
+        )
+
+    def get_fieldsets(self, request, obj):
+        return [
+            (_('Config'), {'fields': self.get_config_fields()})
+        ]
+
+admin.site.register(NewsConfig, NewsConfigAdmin)
 admin.site.register(News, NewsAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)

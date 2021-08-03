@@ -9,6 +9,7 @@ from django.views.generic.list import ListView
 from menus.utils import set_language_changer
 
 from aldryn_news import request_news_identifier
+from aldryn_news.cms_appconfig import NewsConfig
 from aldryn_news.models import Category, News, Tag
 
 
@@ -27,7 +28,16 @@ class BaseNewsView(object):
         return manager
 
 
-class ArchiveView(BaseNewsView, ArchiveIndexView):
+class PaginatedBaseNewsView(BaseNewsView):
+
+    def get_paginate_by(self, queryset):
+        news_config = NewsConfig.objects.all().first()
+        if news_config:
+            return news_config.paginate_by
+        return super().get_paginate_by(queryset)
+
+
+class ArchiveView(PaginatedBaseNewsView, ArchiveIndexView):
 
     model = News
     date_field = 'publication_start'
@@ -52,7 +62,7 @@ class ArchiveView(BaseNewsView, ArchiveIndexView):
         return super(ArchiveView, self).get_context_data(**kwargs)
 
 
-class TaggedListView(BaseNewsView, ListView):
+class TaggedListView(PaginatedBaseNewsView, ListView):
 
     template_name = 'aldryn_news/news_list.html'
 
@@ -70,7 +80,7 @@ class TaggedListView(BaseNewsView, ListView):
         return super(TaggedListView, self).get_context_data(**kwargs)
 
 
-class CategoryListView(BaseNewsView, ListView):
+class CategoryListView(PaginatedBaseNewsView, ListView):
 
     template_name = 'aldryn_news/news_list.html'
 
