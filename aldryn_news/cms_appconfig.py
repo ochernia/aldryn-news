@@ -20,10 +20,6 @@ class NewsConfig(AppHookConfig):
         null=True
     )
 
-    # def __str__(self):
-    #     if self.cmsapp:
-    #         return self.cmsapp.name
-
     def save(self, *args, **kwargs):
         self.pk = 1
         self.namespace = 'news'
