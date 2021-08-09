@@ -6,7 +6,7 @@ from aldryn_apphooks_config.admin import ModelAppHookConfig, BaseAppHookConfig
 
 from cms.admin.placeholderadmin import FrontendEditableAdminMixin, PlaceholderAdminMixin
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from hvad.admin import TranslatableAdmin
 
 from aldryn_news.cms_appconfig import NewsConfig
